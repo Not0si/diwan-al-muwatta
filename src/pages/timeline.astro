@@ -70,7 +70,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       text-align: center;
       padding-bottom: 2.5rem;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
 
     .page-header .kicker {
@@ -100,9 +100,123 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       font-size: 1rem;
     }
 
+    /* ---------- Search Bar & Scope Filters ---------- */
+    .search-container {
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 1rem;
+      color: var(--ink-soft);
+      pointer-events: none;
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.85rem 2.8rem 0.85rem 2.5rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      outline: none;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+      direction: rtl;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-tint);
+    }
+
+    .clear-search {
+      position: absolute;
+      left: 0.85rem;
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      padding: 0.25rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .clear-search:hover {
+      color: var(--ink);
+      background: var(--border-soft);
+    }
+
+    .search-input:not(:placeholder-shown) ~ .clear-search {
+      display: flex;
+    }
+
+    /* Search Scope Buttons */
+    .search-scopes {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    .scope-label {
+      color: var(--ink-soft);
+      font-weight: 600;
+      margin-left: 0.2rem;
+    }
+
+    .scope-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--ink-soft);
+      padding: 0.3rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .scope-btn:hover {
+      background: var(--bg-row);
+      color: var(--ink);
+      border-color: var(--accent-soft);
+    }
+
+    .scope-btn.is-active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(138, 109, 59, 0.25);
+    }
+
     /* ---------- Episode ---------- */
     .episode {
       margin-bottom: 2.5rem;
+    }
+
+    .episode.is-hidden {
+      display: none !important;
     }
 
     .episode-header {
@@ -172,6 +286,10 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       border-bottom: 1px solid var(--border-soft);
       transition: background 0.15s ease;
       position: relative;
+    }
+
+    .row.is-hidden {
+      display: none !important;
     }
 
     .row:last-child {
@@ -298,15 +416,6 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       z-index: 2;
     }
 
-    .duration {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--ink-faint);
-      direction: ltr;
-      unicode-bidi: isolate;
-      white-space: nowrap;
-    }
-
     .yt-btn {
       display: inline-flex;
       align-items: center;
@@ -339,7 +448,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       height: 12px;
     }
 
-    /* ---------- Empty state ---------- */
+    /* ---------- Empty states ---------- */
     .empty {
       text-align: center;
       padding: 3rem 1rem;
@@ -347,6 +456,17 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       background: var(--bg-card);
       border: 1px dashed var(--border);
       border-radius: 14px;
+    }
+
+    #no-search-results {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--ink-soft);
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      margin-top: 1.5rem;
     }
 
     /* ---------- Responsive ---------- */
@@ -389,6 +509,9 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
     }
 
     @media print {
+      .search-container {
+        display: none;
+      }
       .rows {
         box-shadow: none;
         break-inside: avoid;
@@ -412,93 +535,243 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       </p>
     </header>
 
+    <!-- Search Bar & Scope Buttons -->
+    <div class='search-container'>
+      <div class='search-input-wrapper'>
+        <svg
+          class='search-icon'
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='2'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          aria-hidden='true'
+        >
+          <circle cx='11' cy='11' r='8'></circle>
+          <line x1='21' y1='21' x2='16.65' y2='16.65'></line>
+        </svg>
+        <input
+          type='text'
+          id='timeline-search'
+          class='search-input'
+          placeholder='ابحث في الجدول الزمني...'
+          autocomplete='off'
+        />
+        <button
+          type='button'
+          id='clear-search-btn'
+          class='clear-search'
+          aria-label='مسح البحث'
+        >
+          <svg
+            width='16'
+            height='16'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            stroke-width='2.5'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+          >
+            <line x1='18' y1='6' x2='6' y2='18'></line>
+            <line x1='6' y1='6' x2='18' y2='18'></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class='search-scopes'>
+        <span class='scope-label'>البحث في:</span>
+        <button type='button' class='scope-btn is-active' data-scope='all'>
+          الكل
+        </button>
+        <button type='button' class='scope-btn' data-scope='detail'>
+          النص / الدرس
+        </button>
+        <button type='button' class='scope-btn' data-scope='book'>
+          الكتاب
+        </button>
+        <button type='button' class='scope-btn' data-scope='chapter'>
+          الباب
+        </button>
+        <button type='button' class='scope-btn' data-scope='episode'>
+          رقم الحلقة
+        </button>
+      </div>
+    </div>
+
     {episodesWithUrls.length === 0 ? (
       <div class='empty'>لا توجد بيانات لعرضها.</div>
     ) : (
-      episodesWithUrls.map(({ episode, items }) => (
-        <section class='episode' aria-label={`الحلقة ${episode}`}>
-          <div class='episode-header'>
-            <span class='episode-badge'>
-              <svg
-                class='icon'
-                width='14'
-                height='14'
-                viewBox='0 0 24 24'
-                fill='none'
-                stroke='currentColor'
-                stroke-width='2.5'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                aria-hidden='true'
-              >
-                <polygon points='5 3 19 12 5 21 5 3' />
-              </svg>
-              {num(episode)}
-            </span>
-            <h2 class='episode-title'>
-              {items.find((i) => i.book)?.book || "—"}
-            </h2>
-            <span class='episode-count'>{num(items.length)} سطر</span>
-          </div>
-
-          <ol class='rows'>
-            {items.map((item) => {
-              const prefix = prefixLabel[item.prefix] ?? prefixLabel.None
-              return (
-                <li
-                  class:list={[
-                    "row",
-                    item.prefix === "Book" && "is-book",
-                    item.prefix === "Chapter" && "is-chapter",
-                  ]}
+      <>
+        {episodesWithUrls.map(({ episode, items }) => (
+          <section
+            class='episode'
+            aria-label={`الحلقة ${episode}`}
+            data-episode={episode}
+          >
+            <div class='episode-header'>
+              <span class='episode-badge'>
+                <svg
+                  class='icon'
+                  width='14'
+                  height='14'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  stroke-width='2.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  aria-hidden='true'
                 >
-                  {item.url && (
-                    <a
-                      class='row-link'
-                      href={item.url}
-                      target='_blank'
-                      rel='noopener'
-                      aria-label={`تشغيل عند ${item.timeString}: ${item.detail}`}
-                    />
-                  )}
+                  <polygon points='5 3 19 12 5 21 5 3' />
+                </svg>
+                {num(episode)}
+              </span>
+              <h2 class='episode-title'>
+                {items.find((i) => i.book)?.book || "—"}
+              </h2>
+              <span class='episode-count'>{num(items.length)} سطر</span>
+            </div>
 
-                  <span class='time'>{item.timeString}</span>
-
-                  <div class='detail'>
-                    {prefix.label && (
-                      <span class:list={["tag", prefix.cls]}>
-                        {prefix.label}
-                      </span>
-                    )}
-                    <span class='detail-text'>{item.detail}</span>
-                  </div>
-
-                  <div class='row-actions'>
+            <ol class='rows'>
+              {items.map((item) => {
+                const prefix = prefixLabel[item.prefix] ?? prefixLabel.None
+                return (
+                  <li
+                    class:list={[
+                      "row",
+                      item.prefix === "Book" && "is-book",
+                      item.prefix === "Chapter" && "is-chapter",
+                    ]}
+                    data-detail={item.detail.toLowerCase()}
+                    data-book={(item.book || "").toLowerCase()}
+                    data-chapter={(item.chapter || "").toLowerCase()}
+                    data-episode={String(episode)}
+                    data-all={`${item.detail} ${item.book || ""} ${item.chapter || ""} ${item.timeString} ${episode}`.toLowerCase()}
+                  >
                     {item.url && (
                       <a
-                        class='yt-btn'
+                        class='row-link'
                         href={item.url}
                         target='_blank'
                         rel='noopener'
-                        aria-label='تشغيل على يوتيوب'
-                        title='تشغيل على يوتيوب'
-                      >
-                        <svg
-                          viewBox='0 0 24 24'
-                          fill='currentColor'
-                          aria-hidden='true'
-                        >
-                          <path d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' />
-                        </svg>
-                      </a>
+                        aria-label={`تشغيل عند ${item.timeString}: ${item.detail}`}
+                      />
                     )}
-                  </div>
-                </li>
-              )
-            })}
-          </ol>
-        </section>
-      ))
+
+                    <span class='time'>{item.timeString}</span>
+
+                    <div class='detail'>
+                      {prefix.label && (
+                        <span class:list={["tag", prefix.cls]}>
+                          {prefix.label}
+                        </span>
+                      )}
+                      <span class='detail-text'>{item.detail}</span>
+                    </div>
+
+                    <div class='row-actions'>
+                      {item.url && (
+                        <a
+                          class='yt-btn'
+                          href={item.url}
+                          target='_blank'
+                          rel='noopener'
+                          aria-label='تشغيل على يوتيوب'
+                          title='تشغيل على يوتيوب'
+                        >
+                          <svg
+                            viewBox='0 0 24 24'
+                            fill='currentColor'
+                            aria-hidden='true'
+                          >
+                            <path d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
+            </ol>
+          </section>
+        ))}
+        <div id='no-search-results'>لم يتم العثور على نتائج تطابق بحثك.</div>
+      </>
     )}
   </main>
+
+  <script>
+    const searchInput = document.getElementById(
+      "timeline-search"
+    ) as HTMLInputElement
+    const clearBtn = document.getElementById(
+      "clear-search-btn"
+    ) as HTMLButtonElement
+    const scopeBtns = document.querySelectorAll(".scope-btn")
+    const episodes = document.querySelectorAll(".episode")
+    const noResults = document.getElementById("no-search-results")
+
+    let currentScope = "all"
+
+    function handleSearch() {
+      if (!searchInput) return
+      const query = searchInput.value.trim().toLowerCase()
+      let visibleCount = 0
+
+      episodes.forEach((episodeEl) => {
+        const rows = episodeEl.querySelectorAll(".row")
+        let episodeHasVisibleRow = false
+
+        rows.forEach((rowEl) => {
+          const targetText =
+            rowEl.getAttribute(`data-${currentScope}`)?.toLowerCase() || ""
+
+          if (query === "" || targetText.includes(query)) {
+            rowEl.classList.remove("is-hidden")
+            episodeHasVisibleRow = true
+            visibleCount++
+          } else {
+            rowEl.classList.add("is-hidden")
+          }
+        })
+
+        if (episodeHasVisibleRow) {
+          episodeEl.classList.remove("is-hidden")
+        } else {
+          episodeEl.classList.add("is-hidden")
+        }
+      })
+
+      if (noResults) {
+        if (visibleCount === 0 && query.length > 0) {
+          noResults.style.display = "block"
+        } else {
+          noResults.style.display = "none"
+        }
+      }
+    }
+
+    searchInput?.addEventListener("input", handleSearch)
+
+    scopeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        scopeBtns.forEach((b) => b.classList.remove("is-active"))
+        btn.classList.add("is-active")
+        currentScope = btn.getAttribute("data-scope") || "all"
+        handleSearch()
+        searchInput?.focus()
+      })
+    })
+
+    clearBtn?.addEventListener("click", () => {
+      if (searchInput) {
+        searchInput.value = ""
+        handleSearch()
+        searchInput.focus()
+      }
+    })
+  </script>
 </BaseLayout>
