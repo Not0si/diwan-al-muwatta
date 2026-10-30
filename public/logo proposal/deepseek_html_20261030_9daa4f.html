@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كُرْسِيُّ الإِمَامِ مَالِكٍ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: #f4f1e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* === CIRCLE WITH PATTERN === */
+    .circle {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: #1b4332;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 45px -18px rgba(27, 67, 50, 0.55);
+      overflow: hidden;
+    }
+
+    /* outer thin ring — cream */
+    .circle::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(244, 241, 232, 0.35);
+    }
+
+    /* inner dashed gold ring */
+    .circle::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 50%;
+      border: 1px dashed rgba(212, 169, 66, 0.55);
+    }
+
+    /* the 8-point star pattern inside — two overlapped squares */
+    .star {
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      border: 1.5px solid #d4a942;
+    }
+
+    .star.a { transform: rotate(0deg); }
+    .star.b { transform: rotate(45deg); }
+
+    /* inner smaller star — two more squares, cream */
+    .star-inner {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border: 1px solid rgba(244, 241, 232, 0.75);
+    }
+
+    .star-inner.a { transform: rotate(0deg); }
+    .star-inner.b { transform: rotate(45deg); }
+
+    /* center diamond — gold fill */
+    .core {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #d4a942;
+      transform: rotate(45deg);
+      z-index: 3;
+      box-shadow: 0 0 14px rgba(212, 169, 66, 0.6);
+    }
+
+    /* corner dots on the outer ring (N/E/S/W) */
+    .dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #d4a942;
+      border-radius: 50%;
+      z-index: 4;
+    }
+    .dot.n { top: 6px; left: 50%; transform: translateX(-50%); }
+    .dot.s { bottom: 6px; left: 50%; transform: translateX(-50%); }
+    .dot.e { right: 6px; top: 50%; transform: translateY(-50%); }
+    .dot.w { left: 6px; top: 50%; transform: translateY(-50%); }
+
+    /* === TEXT === */
+    .text {
+      text-align: center;
+      direction: rtl;
+      color: #1b4332;
+    }
+
+    .text .arabic {
+      font-family: 'Amiri', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: 0.5px;
+    }
+
+    .text .arabic .gold {
+      color: #b8942e;
+    }
+
+    .text .latin {
+      margin-top: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      opacity: 0.45;
+      direction: ltr;
+    }
+
+    /* hover */
+    .logo:hover .star.a { transform: rotate(45deg); }
+    .logo:hover .star.b { transform: rotate(0deg); }
+    .star { transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+
+    /* responsive */
+    @media (max-width: 460px) {
+      .circle { width: 150px; height: 150px; }
+      .star { width: 80px; height: 80px; }
+      .star-inner { width: 44px; height: 44px; }
+      .core { width: 16px; height: 16px; }
+      .text .arabic { font-size: 1.35rem; }
+      .text .latin { font-size: 0.52rem; letter-spacing: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <div class="circle">
+      <div class="star a"></div>
+      <div class="star b"></div>
+      <div class="star-inner a"></div>
+      <div class="star-inner b"></div>
+      <div class="core"></div>
+      <div class="dot n"></div>
+      <div class="dot s"></div>
+      <div class="dot e"></div>
+      <div class="dot w"></div>
+    </div>
+
+    <div class="text">
+      <div class="arabic">كُرْسِيُّ الإِمَامِ <span class="gold">مَالِكٍ</span></div>
+      <div class="latin">Chair of Imam Malik</div>
+    </div>
+  </div>
+</body>
+</html>

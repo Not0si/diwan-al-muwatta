@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كُرْسِيُّ الإِمَامِ مَالِكٍ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: #fbfaf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    /* === GEOMETRIC MARK === */
+    .mark {
+      position: relative;
+      width: 108px;
+      height: 108px;
+      flex-shrink: 0;
+    }
+
+    /* three overlapping geometric shapes forming an abstract م */
+    .shape {
+      position: absolute;
+      background: #1b4332;
+    }
+
+    /* vertical bar (left stroke of م) */
+    .shape.vbar {
+      width: 20px;
+      height: 84px;
+      left: 8px;
+      top: 12px;
+      border-radius: 2px;
+    }
+
+    /* horizontal connector (top stroke) */
+    .shape.hbar {
+      width: 68px;
+      height: 20px;
+      left: 8px;
+      top: 12px;
+      border-radius: 2px;
+    }
+
+    /* the rounded hook of م — a circle */
+    .shape.hook {
+      width: 52px;
+      height: 52px;
+      right: 0;
+      bottom: 12px;
+      background: #d4a942;
+      border-radius: 50%;
+    }
+
+    /* small dot that fills the hook — hollow it out */
+    .shape.hook::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      background: #fbfaf7;
+      border-radius: 50%;
+    }
+
+    /* === TEXT === */
+    .text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .text .arabic {
+      font-family: 'Reem Kufi', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #1b4332;
+      direction: rtl;
+      letter-spacing: 0.5px;
+    }
+
+    .text .arabic .gold {
+      color: #d4a942;
+    }
+
+    .text .latin {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: #1b4332;
+      opacity: 0.4;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 560px) {
+      .logo {
+        flex-direction: column;
+        gap: 26px;
+        text-align: center;
+      }
+      .mark { width: 88px; height: 88px; }
+      .shape.vbar { width: 16px; height: 68px; left: 6px; top: 10px; }
+      .shape.hbar { width: 56px; height: 16px; left: 6px; top: 10px; }
+      .shape.hook { width: 44px; height: 44px; bottom: 10px; }
+      .shape.hook::after { inset: 10px; }
+      .text .arabic { font-size: 1.45rem; }
+      .text .latin { font-size: 0.55rem; letter-spacing: 4px; }
+      .text { align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <div class="mark">
+      <div class="shape vbar"></div>
+      <div class="shape hbar"></div>
+      <div class="shape hook"></div>
+    </div>
+
+    <div class="text">
+      <div class="arabic">كُرْسِيُّ الإِمَامِ <span class="gold">مَالِكٍ</span></div>
+      <div class="latin">Chair of Imam Malik</div>
+    </div>
+  </div>
+</body>
+</html>
