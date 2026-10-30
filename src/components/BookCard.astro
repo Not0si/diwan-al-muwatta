@@ -22,6 +22,20 @@ const {
 const num = (n: number | null | undefined) =>
   n == null ? "" : n.toLocaleString("ar-MA", { useGrouping: false })
 
+function formatPlural(
+  count: number,
+  singular: string,
+  dual: string,
+  plural: string,
+  elevenPlus: string
+): string {
+  if (count === 0) return `${count} ${plural}`
+  if (count === 1) return singular
+  if (count === 2) return dual
+  if (count >= 3 && count <= 10) return `${count} ${plural}`
+  return `${count} ${elevenPlus}`
+}
+
 const targetUrl = href || `/diwan#book-${bookNumber}`
 ---
 
@@ -46,9 +60,13 @@ const targetUrl = href || `/diwan#book-${bookNumber}`
     </div>
 
     <footer class='card-footer'>
-      <span class='meta-badge'>{num(hadithCount)} حديث</span>
+      <span class='meta-badge'>
+        {formatPlural(hadithCount, "حديث واحد", "حديثان", "أحاديث", "حديثاً")}
+      </span>
       <span class='meta-dot'>•</span>
-      <span class='meta-badge'>{num(chapterCount)} باب</span>
+      <span class='meta-badge'>
+        {formatPlural(chapterCount, "باب واحد", "بابان", "أبواب", "باباً")}
+      </span>
     </footer>
   </article>
 </a>
