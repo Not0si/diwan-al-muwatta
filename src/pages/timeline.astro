@@ -62,13 +62,15 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
     .page {
       max-width: 880px;
       margin: 0 auto;
-      padding: 3rem 1.5rem 6rem;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 1.5rem) 6rem;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     /* ---------- Page header ---------- */
     .page-header {
       text-align: center;
-      padding-bottom: 2.5rem;
+      padding-bottom: 2rem;
       border-bottom: 1px solid var(--border);
       margin-bottom: 2rem;
     }
@@ -87,7 +89,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
 
     .page-header h1 {
       font-family: "Amiri", serif;
-      font-size: clamp(1.9rem, 4vw, 2.75rem);
+      font-size: clamp(1.8rem, 4vw, 2.75rem);
       font-weight: 700;
       margin: 0 0 0.75rem;
       color: var(--ink);
@@ -97,7 +99,8 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       color: var(--ink-soft);
       margin: 0 auto;
       max-width: 34rem;
-      font-size: 1rem;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      line-height: 1.6;
     }
 
     /* ---------- Search Bar & Scope Filters ---------- */
@@ -112,6 +115,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       position: relative;
       display: flex;
       align-items: center;
+      width: 100%;
     }
 
     .search-icon {
@@ -138,6 +142,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
         border-color 0.15s ease,
         box-shadow 0.15s ease;
       direction: rtl;
+      box-sizing: border-box;
     }
 
     .search-input:focus {
@@ -187,13 +192,14 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--ink-soft);
-      padding: 0.3rem 0.75rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 8px;
       cursor: pointer;
       font-family: inherit;
       font-size: 0.82rem;
       font-weight: 500;
       transition: all 0.15s ease;
+      touch-action: manipulation;
     }
 
     .scope-btn:hover {
@@ -226,6 +232,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       margin-bottom: 1rem;
       padding-bottom: 0.75rem;
       border-bottom: 2px solid var(--accent-soft);
+      flex-wrap: wrap;
     }
 
     .episode-badge {
@@ -250,12 +257,13 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
 
     .episode-title {
       font-family: "Amiri", serif;
-      font-size: 1.25rem;
+      font-size: clamp(1.1rem, 3vw, 1.25rem);
       font-weight: 700;
       color: var(--ink);
       margin: 0;
       flex: 1;
       min-width: 0;
+      overflow-wrap: break-word;
     }
 
     .episode-count {
@@ -263,6 +271,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       color: var(--ink-soft);
       font-weight: 600;
       white-space: nowrap;
+      margin-right: auto;
     }
 
     /* ---------- Timeline rows ---------- */
@@ -313,26 +322,6 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       border-top: 1px solid var(--border);
     }
 
-    /* Row link overlay — only when a URL exists */
-    .row-link {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      border-radius: 0;
-    }
-
-    .row:has(.row-link) {
-      cursor: pointer;
-    }
-
-    .row:has(.row-link):hover {
-      background: rgba(138, 109, 59, 0.06);
-    }
-
-    .row:has(.row-link) .time {
-      background: var(--accent-tint);
-    }
-
     /* time column */
     .time {
       font-family: var(--mono);
@@ -346,6 +335,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       direction: ltr;
       unicode-bidi: isolate;
       white-space: nowrap;
+      justify-self: start;
     }
 
     /* detail column */
@@ -358,22 +348,23 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
     }
 
     .detail-text {
-      font-size: 1rem;
+      font-size: clamp(0.95rem, 2vw, 1rem);
       color: var(--ink);
       line-height: 1.5;
+      overflow-wrap: break-word;
       word-break: break-word;
     }
 
     .row.is-book .detail-text {
       font-family: "Amiri", serif;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: clamp(1.05rem, 2.5vw, 1.15rem);
       color: var(--accent);
     }
 
     .row.is-chapter .detail-text {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: clamp(1rem, 2.2vw, 1.05rem);
     }
 
     /* prefix tag */
@@ -407,45 +398,68 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       display: none;
     }
 
-    /* duration + play button column */
+    /* action buttons column */
     .row-actions {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       position: relative;
       z-index: 2;
     }
 
-    .yt-btn {
+    .action-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 1.85rem;
-      height: 1.85rem;
+      width: 2rem;
+      height: 2rem;
       border-radius: 50%;
-      background: rgba(255, 0, 0, 0.08);
-      color: #ff0000;
       transition:
         background 0.15s ease,
         color 0.15s ease,
         transform 0.15s ease;
       flex-shrink: 0;
+      border: none;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .yt-btn {
+      background: rgba(255, 0, 0, 0.08);
+      color: #ff0000;
+      text-decoration: none;
     }
 
     .yt-btn:hover {
       background: #ff0000;
       color: #fff;
-      transform: scale(1.1);
-    }
-
-    .yt-btn:focus-visible {
-      outline: 2px solid #ff0000;
-      outline-offset: 2px;
+      transform: scale(1.08);
     }
 
     .yt-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .share-btn {
+      background: rgba(138, 109, 59, 0.08);
+      color: var(--accent);
+    }
+
+    .share-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    .share-btn svg {
       width: 12px;
       height: 12px;
+    }
+
+    .share-btn.copied {
+      background: #10b981;
+      color: #fff;
     }
 
     /* ---------- Empty states ---------- */
@@ -469,42 +483,54 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       margin-top: 1.5rem;
     }
 
-    /* ---------- Responsive ---------- */
-    @media (max-width: 640px) {
-      .page {
-        padding: 2rem 1rem 4rem;
-      }
-
+    /* ---------- Responsive Breakpoints ---------- */
+    @media (max-width: 680px) {
       .row {
-        grid-template-columns: 5rem 1fr auto;
-        gap: 0.5rem 0.75rem;
-        padding: 0.75rem 1rem;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+          "time actions"
+          "detail detail";
+        gap: 0.6rem 0.75rem;
+        padding: 0.85rem 1rem;
+        align-items: start;
       }
 
       .time {
-        font-size: 0.75rem;
-      }
-
-      .detail {
-        grid-column: 2 / -1;
+        grid-area: time;
+        align-self: center;
+        font-size: 0.78rem;
       }
 
       .row-actions {
-        grid-column: 3;
-        grid-row: 1;
+        grid-area: actions;
+        justify-self: end;
         align-self: center;
       }
 
-      .episode-header {
-        flex-wrap: wrap;
+      .detail {
+        grid-area: detail;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .search-scopes {
+        gap: 0.3rem;
       }
 
-      .episode-title {
-        font-size: 1.1rem;
+      .scope-btn {
+        font-size: 0.78rem;
+        padding: 0.3rem 0.6rem;
+      }
+
+      .episode-header {
+        gap: 0.5rem;
       }
 
       .episode-count {
         width: 100%;
+        margin-right: 0;
+        margin-top: 0.1rem;
       }
     }
 
@@ -519,7 +545,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       .row:hover {
         background: transparent;
       }
-      .yt-btn {
+      .row-actions {
         display: none;
       }
     }
@@ -535,7 +561,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
       </p>
     </header>
 
-    <!-- Search Bar & Scope Buttons -->
+    <!-- Search Bar & Scope Filters -->
     <div class='search-container'>
       <div class='search-input-wrapper'>
         <svg
@@ -651,16 +677,6 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
                     data-episode={String(episode)}
                     data-all={`${item.detail} ${item.book || ""} ${item.chapter || ""} ${item.timeString} ${episode}`.toLowerCase()}
                   >
-                    {item.url && (
-                      <a
-                        class='row-link'
-                        href={item.url}
-                        target='_blank'
-                        rel='noopener'
-                        aria-label={`تشغيل عند ${item.timeString}: ${item.detail}`}
-                      />
-                    )}
-
                     <span class='time'>{item.timeString}</span>
 
                     <div class='detail'>
@@ -674,22 +690,45 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
 
                     <div class='row-actions'>
                       {item.url && (
-                        <a
-                          class='yt-btn'
-                          href={item.url}
-                          target='_blank'
-                          rel='noopener'
-                          aria-label='تشغيل على يوتيوب'
-                          title='تشغيل على يوتيوب'
-                        >
-                          <svg
-                            viewBox='0 0 24 24'
-                            fill='currentColor'
-                            aria-hidden='true'
+                        <>
+                          <button
+                            type='button'
+                            class='action-btn share-btn'
+                            data-url={item.url}
+                            aria-label='نسخ رابط الدرس'
+                            title='نسخ الرابط'
                           >
-                            <path d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' />
-                          </svg>
-                        </a>
+                            <svg
+                              viewBox='0 0 24 24'
+                              fill='none'
+                              stroke='currentColor'
+                              stroke-width='2.5'
+                              stroke-linecap='round'
+                              stroke-linejoin='round'
+                              aria-hidden='true'
+                            >
+                              <path d='M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8'></path>
+                              <polyline points='16 6 12 2 8 6'></polyline>
+                              <line x1='12' y1='2' x2='12' y2='15'></line>
+                            </svg>
+                          </button>
+                          <a
+                            class='action-btn yt-btn'
+                            href={item.url}
+                            target='_blank'
+                            rel='noopener'
+                            aria-label='تشغيل على يوتيوب'
+                            title='تشغيل على يوتيوب'
+                          >
+                            <svg
+                              viewBox='0 0 24 24'
+                              fill='currentColor'
+                              aria-hidden='true'
+                            >
+                              <path d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' />
+                            </svg>
+                          </a>
+                        </>
                       )}
                     </div>
                   </li>
@@ -713,6 +752,7 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
     const scopeBtns = document.querySelectorAll(".scope-btn")
     const episodes = document.querySelectorAll(".episode")
     const noResults = document.getElementById("no-search-results")
+    const shareBtns = document.querySelectorAll(".share-btn")
 
     let currentScope = "all"
 
@@ -772,6 +812,28 @@ const episodesWithUrls = episodes.map(({ episode, items }) => {
         handleSearch()
         searchInput.focus()
       }
+    })
+
+    // Share button copy handler
+    shareBtns.forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const url = btn.getAttribute("data-url")
+        if (!url) return
+
+        try {
+          await navigator.clipboard.writeText(url)
+          btn.classList.add("copied")
+          const originalTitle = btn.getAttribute("title")
+          btn.setAttribute("title", "تم نسخ الرابط!")
+
+          setTimeout(() => {
+            btn.classList.remove("copied")
+            if (originalTitle) btn.setAttribute("title", originalTitle)
+          }, 2000)
+        } catch (err) {
+          console.error("Failed to copy URL: ", err)
+        }
+      })
     })
   </script>
 </BaseLayout>
